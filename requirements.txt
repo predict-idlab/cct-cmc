@@ -1,0 +1,7 @@
+numpy
+scipy
+scikit-learn
+crepes
+seaborn
+ipykernel
+jupyterlab

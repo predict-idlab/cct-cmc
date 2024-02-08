@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+__pycache__
+.vscode
+.pytest_cache
+.mypy_cache
+data/ACIC2016
+# notebooks/archive
+
+# Jupyter NB Checkpoints
+.ipynb_checkpoints/
+
+
+# virtual environments
+.venv/
+env/
+venv/
+/datasets/ACIC2016_dataset.csv
+/datasets/news_100_features_dataset.p
+/datasets/tcga_100_features_dataset.p
+/datasets/Twins_dataset
+/datasets/Twins_dataset.csv
+/data
+/results/outputs
+

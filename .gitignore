@@ -6,6 +6,7 @@ __pycache__
 .pytest_cache
 .mypy_cache
 data/ACIC2016
+.DS_Store
 # notebooks/archive
 
 # Jupyter NB Checkpoints
@@ -16,11 +17,11 @@ data/ACIC2016
 .venv/
 env/
 venv/
-/datasets/ACIC2016_dataset.csv
-/datasets/news_100_features_dataset.p
-/datasets/tcga_100_features_dataset.p
-/datasets/Twins_dataset
-/datasets/Twins_dataset.csv
-/data
+/data/ACIC2016_dataset.csv
+/data/news_100_features_dataset.p
+/data/tcga_100_features_dataset.p
+/data/Twins_dataset
+/data/Twins_dataset.csv
+/data/*
 /results/outputs
 

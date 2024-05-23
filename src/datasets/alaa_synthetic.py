@@ -1,125 +1,16 @@
+"""Synthetic data generation for the Alaa et al. 2023 paper.
+source: https://github.com/AlaaLab/conformal-metalearners
+"""
+
 import os
+from pathlib import Path
+from typing import Any, Tuple
 
 import numpy as np
 import pandas as pd
 from scipy.special import erfinv
 from scipy.stats import beta, norm
 from sklearn.linear_model import LogisticRegression
-
-IHDP_TRAIN_DATASET = "../../data/IHDP/ihdp_npci_1-100.train.npz"
-IHDP_TEST_DATASET = "../../data/IHDP/ihdp_npci_1-100.test.npz"
-IHDP_TRAIN_URL = "https://www.fredjo.com/files/ihdp_npci_1-100.train.npz"
-IHDP_TEST_URL = "https://www.fredjo.com/files/ihdp_npci_1-100.test.npz"
-PATH_dir = "../../data/NLSM/sim_data"
-
-from pathlib import Path
-from typing import Any, Tuple
-
-
-def convert(npz_file, scale=None):
-    npz_data = np.load(npz_file)
-    scales = []
-
-    x = npz_data["x"]
-    t = npz_data["t"]
-    yf = npz_data["yf"]
-    ycf = npz_data["ycf"]
-    mu0 = npz_data["mu0"]
-    mu1 = npz_data["mu1"]
-
-    num_realizations = x.shape[2]
-
-    dataframes = []
-
-    for i in range(num_realizations):
-        x_realization = x[:, :, i]
-        t_realization = t[:, i]
-        yf_realization = yf[:, i]
-        ycf_realization = ycf[:, i]
-        mu1_realization = mu1[:, i]
-        mu0_realization = mu0[:, i]
-
-        model = LogisticRegression()
-        model.fit(x_realization, t_realization)
-
-        df = pd.DataFrame(
-            x_realization, columns=[f"X{j + 1}" for j in range(x_realization.shape[1])]
-        )
-        df["T"] = t_realization
-        df["Y"] = yf_realization
-        df["Y_cf"] = ycf_realization
-        df["Y1"] = yf_realization * t_realization + ycf_realization * (
-            1 - t_realization
-        )  # mu1_realization
-        df["Y0"] = ycf_realization * t_realization + yf_realization * (
-            1 - t_realization
-        )  # mu0_realization
-        df["ITE"] = df["Y1"] - df["Y0"]
-        df["ps"] = model.predict_proba(x_realization)[:, 1]
-
-        df["CATE"] = mu1_realization - mu0_realization
-
-        sd_cate = np.sqrt((np.array(df["CATE"])).var())
-
-        if scale is None:
-            if sd_cate > 1:
-                error_0 = np.array(df["Y0"]) - mu0_realization
-                error_1 = np.array(df["Y1"]) - mu1_realization
-
-                mu0_ = mu0_realization / sd_cate
-                mu1_ = mu1_realization / sd_cate
-
-                scales.append(sd_cate)
-
-                df["Y0"] = mu0_ + error_0
-                df["Y1"] = mu1_ + error_1
-                df["ITE"] = df["Y1"] - df["Y0"]
-                df["CATE"] = mu1_ - mu0_
-
-            else:
-                scales.append(1)
-
-        elif scale is not None:
-            # test data
-            error_0 = np.array(df["Y0"]) - mu0_realization
-            error_1 = np.array(df["Y1"]) - mu1_realization
-
-            mu0_ = mu0_realization / scale[i]
-            mu1_ = mu1_realization / scale[i]
-
-            df["Y0"] = mu0_ + error_0
-            df["Y1"] = mu1_ + error_1
-            df["ITE"] = df["Y1"] - df["Y0"]
-            df["CATE"] = mu1_ - mu0_
-
-        dataframes.append(df)
-
-    return dataframes, scales
-
-
-def IHDP_data():
-    train = IHDP_TRAIN_DATASET
-    test = IHDP_TEST_DATASET
-
-    train_data, scale = convert(train)
-    test_data, _ = convert(test, scale)
-
-    return train_data, test_data
-
-
-def NLSM_data():
-    # see: https://github.com/lihualei71/cfcausalPaper/tree/master
-    NLSM_files = os.listdir(PATH_dir)
-
-    dataset = []
-
-    for nlsm_file in NLSM_files:
-        df = pd.read_csv(PATH_dir + "/" + nlsm_file)
-        df["CATE"] = df["Etau"]
-
-        dataset.append(df)
-
-    return dataset
 
 
 def generate_data(n, d, gamma, alpha, nexps, correlated=False, heteroscedastic=True):

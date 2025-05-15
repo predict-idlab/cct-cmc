@@ -17,11 +17,8 @@ data/ACIC2016
 .venv/
 env/
 venv/
-/data/ACIC2016_dataset.csv
-/data/news_100_features_dataset.p
-/data/tcga_100_features_dataset.p
-/data/Twins_dataset
-/data/Twins_dataset.csv
 /data/*
 /results/outputs
 
+# private data
+.env

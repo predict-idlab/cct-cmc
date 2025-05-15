@@ -6,6 +6,7 @@ Note that this is an extended version of the original code
 """
 
 import numpy as np  # type: ignore
+import pandas as pd
 from scipy.special import expit, logit  # type: ignore
 
 
@@ -50,7 +51,12 @@ def simulate_nuisance_and_easy_treatment(
     y0 = mu_0 + epsilon_0
     y1 = mu_1 + epsilon_1
     y = y0 * (1 - w) + y1 * w
-    return y, X, w, tau, b, e, y0, y1
+
+    df = pd.DataFrame(
+        np.column_stack((X, w, y, y0, y1, tau, e)),
+        columns=[f"X{i}" for i in range(1, p + 1)] + ["W", "Y", "Y0", "Y1", "CATE", "ps"],
+    )
+    return df
 
 
 def simulate_randomized_trial(n=1000, p=5, sigma=1.0, adj=0.0, c=1.0, heteroscedastic=False):
@@ -89,7 +95,12 @@ def simulate_randomized_trial(n=1000, p=5, sigma=1.0, adj=0.0, c=1.0, heterosced
     y0 = mu_0 + epsilon_0
     y1 = mu_1 + epsilon_1
     y = y0 * (1 - w) + y1 * w
-    return y, X, w, tau, b, e, y0, y1
+
+    df = pd.DataFrame(
+        np.column_stack((X, w, y, y0, y1, tau, e)),
+        columns=[f"X{i}" for i in range(1, p + 1)] + ["W", "Y", "Y0", "Y1", "CATE", "ps"],
+    )
+    return df
 
 
 def simulate_easy_propensity_difficult_baseline(
@@ -129,7 +140,11 @@ def simulate_easy_propensity_difficult_baseline(
     y1 = mu_1 + epsilon_1
     y = y0 * (1 - w) + y1 * w
 
-    return y, X, w, tau, b, e, y0, y1
+    df = pd.DataFrame(
+        np.column_stack((X, w, y, y0, y1, tau, e)),
+        columns=[f"X{i}" for i in range(1, p + 1)] + ["W", "Y", "Y0", "Y1", "CATE", "ps"],
+    )
+    return df
 
 
 def simulate_unrelated_treatment_control(
@@ -175,4 +190,8 @@ def simulate_unrelated_treatment_control(
     y1 = mu_1 + epsilon_1
     y = y0 * (1 - w) + y1 * w
 
-    return y, X, w, tau, b, e, y0, y1
+    df = pd.DataFrame(
+        np.column_stack((X, w, y, y0, y1, tau, e)),
+        columns=[f"X{i}" for i in range(1, p + 1)] + ["W", "Y", "Y0", "Y1", "CATE", "ps"],
+    )
+    return df

@@ -1,0 +1,26 @@
+name: uq
+channels:
+  - conda-forge
+  - defaults
+  - anaconda
+  - nvidia
+dependencies:
+  - python=3.10
+  - cuda-toolkit
+  - pymc-bart
+  - lightning
+  - gpy
+  - scikit-learn
+  - numpy
+  - scipy
+  - seaborn
+  - ipykernel
+  - ipywidgets
+  - pip
+  - pip:
+    - tensorflow
+    - normflows
+    - unstable
+    - crepes
+    - crepes-weighted=0.1.3
+    - tqdm

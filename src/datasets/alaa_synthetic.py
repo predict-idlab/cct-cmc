@@ -11,6 +11,7 @@ import pandas as pd
 from scipy.special import erfinv
 from scipy.stats import beta, norm
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 
 
 def generate_data(n, d, gamma, alpha, nexps, correlated=False, heteroscedastic=True):
@@ -52,7 +53,7 @@ def generate_data(n, d, gamma, alpha, nexps, correlated=False, heteroscedastic=T
 
             data = np.column_stack((X, T, Y))
 
-            column_names = [f"X{i}" for i in range(1, d + 1)] + ["T", "Y"]
+            column_names = [f"X{i}" for i in range(1, d + 1)] + ["W", "Y"]
             df = pd.DataFrame(data, columns=column_names)
             df["xi"] = xi
             df["ps"] = np.array(ps).reshape((-1,))
@@ -109,7 +110,7 @@ def generate_data(n, d, gamma, alpha, nexps, correlated=False, heteroscedastic=T
                 )
 
             data = np.column_stack((X, T, Y))
-            column_names = [f"X{i}" for i in range(1, d + 1)] + ["T", "Y"]
+            column_names = [f"X{i}" for i in range(1, d + 1)] + ["W", "Y"]
             df = pd.DataFrame(data, columns=column_names)
             df["xi"] = xi
             df["cate_percentile"] = cate_percentiles / n_percentiles
@@ -146,7 +147,7 @@ def generate_data(n, d, gamma, alpha, nexps, correlated=False, heteroscedastic=T
             xi = (A - pi) * Y / (pi * (1 - pi))
 
             data = np.column_stack((X, T, Y))
-            column_names = [f"X{i}" for i in range(1, d + 1)] + ["T", "Y"]
+            column_names = [f"X{i}" for i in range(1, d + 1)] + ["W", "Y"]
             df = pd.DataFrame(data, columns=column_names)
             df["xi"] = xi
             df["ps"] = np.array(ps).reshape((-1,))
@@ -196,7 +197,7 @@ def generate_data(n, d, gamma, alpha, nexps, correlated=False, heteroscedastic=T
                 )
 
             data = np.column_stack((X, T, Y))
-            column_names = [f"X{i}" for i in range(1, d + 1)] + ["T", "Y"]
+            column_names = [f"X{i}" for i in range(1, d + 1)] + ["W", "Y"]
             df = pd.DataFrame(data, columns=column_names)
             df["xi"] = xi
             df["cate_percentile"] = cate_percentiles / n_percentiles
@@ -209,3 +210,9 @@ def generate_data(n, d, gamma, alpha, nexps, correlated=False, heteroscedastic=T
             datasets.append(df)
 
     return datasets
+
+
+def get_data(n, d, gamma, alpha, correlated=False, heteroscedastic=True, test_size=0.6):
+    df = generate_data(n, d, gamma, alpha, 1, correlated, heteroscedastic)[0]
+    df_train, df_test = train_test_split(df, test_size=test_size)
+    return df_train, df_test

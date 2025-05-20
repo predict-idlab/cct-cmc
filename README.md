@@ -16,14 +16,14 @@ X, y, W, ps = ...  # your treatment effect dataset (X = covariates, y = outcome,
 cct_Learner = CCT_Learner(
             RandomForestRegressor(),
             RandomForestRegressor(),
-            adaptive_conformal=adaptive_conformal,
+            normalized_conformal=normalized_conformal,
 )
 
 #If you use the pseudo CMC version
 CMC_Learner = CMC_T_Learner(
             RandomForestRegressor(),
             RandomForestRegressor(),
-            adaptive_conformal=adaptive_conformal,
+            normalized_conformal=normalized_conformal,
             pseudo_MC=True,
             MC_samples=MC_samples,
 )
@@ -32,7 +32,7 @@ CMC_Learner = CMC_T_Learner(
 CMC_Learner = CMC_T_Learner(
             RandomForestRegressor(),
             RandomForestRegressorRandomForestRegressor(),
-            adaptive_conformal=adaptive_conformal,
+            normalized_conformal=normalized_conformal,
             pseudo_MC=False,
             MC_samples=MC_samples,
 )
@@ -88,10 +88,10 @@ The full meta-learner is then calibrated again using conformal predictive system
 If you use *CCT-Learner* and *CMC-Learner* in a scientific publication, we would highly appreciate citing us as:
 
 ```bibtex
-@misc{jonkers2024conformal,
+@misc{jonkers2025conformal,
       title={Conformal Convolution and Monte Carlo Meta-learners for Predictive Inference of Individual Treatment Effects},
       author={Jef Jonkers and Jarne Verhaeghe and Glenn Van Wallendael and Luc Duchateau and Sofie Van Hoecke},
-      year={2024},
+      year={2025},
       eprint={2402.04906},
       archivePrefix={arXiv},
       primaryClass={cs.LG}
